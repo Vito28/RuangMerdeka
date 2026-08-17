@@ -1,20 +1,23 @@
 import type { PerformanceTier } from "../../hero/types";
 
 export const MEANING_PHASES = {
-  question: [0, 0.12],
-  sovereign: [0.12, 0.36],
-  justice: [0.36, 0.6],
-  prosperity: [0.6, 0.84],
-  movingForward: [0.84, 1],
+  indonesia: [0, 0.12],
+  feather: [0.1, 0.28],
+  sovereign: [0.26, 0.45],
+  merge: [0.45, 0.62],
+  creation: [0.6, 0.91],
+  framework: [0.78, 0.94],
+  pulse: [0.91, 1],
 } as const;
 
 export const MEANING_CONFIG: Record<
-  "particles" | "nodes" | "growthForms" | "dpr",
+  "particles" | "trails" | "ribbons" | "structures" | "dpr",
   Record<PerformanceTier, number>
 > = {
-  particles: { high: 6500, medium: 4200, low: 1800 },
-  nodes: { high: 40, medium: 26, low: 16 },
-  growthForms: { high: 48, medium: 32, low: 18 },
+  particles: { high: 2800, medium: 1800, low: 800 },
+  trails: { high: 18, medium: 14, low: 10 },
+  ribbons: { high: 3, medium: 2, low: 2 },
+  structures: { high: 18, medium: 15, low: 12 },
   dpr: { high: 1.5, medium: 1.25, low: 1 },
 };
 

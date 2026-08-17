@@ -37,14 +37,16 @@ const fragmentShader = `
 
 export function MovementAtmosphere({ data, pixelRatio, progressRef }: MovementTrailsProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const elapsedRef = useRef(0);
   const uniforms = useMemo(
     () => ({ uTime: { value: 0 }, uProgress: { value: 0 }, uPixelRatio: { value: pixelRatio } }),
     [pixelRatio],
   );
 
-  useFrame(({ clock }, delta) => {
+  useFrame((_, delta) => {
     if (!materialRef.current) return;
-    materialRef.current.uniforms.uTime.value = clock.elapsedTime;
+    elapsedRef.current += delta;
+    materialRef.current.uniforms.uTime.value = elapsedRef.current;
     materialRef.current.uniforms.uProgress.value = THREE.MathUtils.damp(
       materialRef.current.uniforms.uProgress.value,
       progressRef.current,

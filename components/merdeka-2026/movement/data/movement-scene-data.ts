@@ -1,26 +1,20 @@
-import { createIndonesiaPointData, type IndonesiaPointData } from "../../hero/data/indonesia-points";
-
 export type MovementRoute = {
   points: Float32Array;
+  alignedPoints: Float32Array;
   speed: number;
   offset: number;
 };
 
 export type MovementSceneData = {
-  particles: IndonesiaPointData;
-  activations: Float32Array;
-  movementDirections: Float32Array;
-  trailPositions: Float32Array;
   routes: MovementRoute[];
+  trailPositions: Float32Array;
+  alignedTrailPositions: Float32Array;
+  trailAlong: Float32Array;
+  trailBranches: Float32Array;
+  trailTiers: Float32Array;
   ambientPositions: Float32Array;
   ambientSeeds: Float32Array;
 };
-
-const routeGroups: ReadonlyArray<readonly [number, number]> = [
-  [0, 2], [2, 3], [3, 6], [6, 4], [4, 7], [7, 5],
-  [5, 1], [1, 0], [0, 3], [2, 4], [5, 6], [3, 1],
-  [4, 2], [6, 0], [1, 5], [2, 7], [7, 0], [5, 3],
-];
 
 function seededRandom(seed: number) {
   let value = seed >>> 0;
@@ -30,106 +24,93 @@ function seededRandom(seed: number) {
   };
 }
 
-function pointAtGroupFraction(
-  particles: IndonesiaPointData,
-  group: number,
-  fraction: number,
-) {
-  const candidates: number[] = [];
-  for (let index = 0; index < particles.groupIds.length; index += 1) {
-    if (particles.groupIds[index] === group) candidates.push(index);
-  }
-
-  const index = candidates[Math.min(candidates.length - 1, Math.floor(fraction * candidates.length))] ?? 0;
-  const offset = index * 3;
-  return [
-    particles.positions[offset],
-    particles.positions[offset + 1],
-    particles.positions[offset + 2] + 0.08,
-  ] as const;
+function smoothstep(edge0: number, edge1: number, value: number) {
+  const t = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)));
+  return t * t * (3 - 2 * t);
 }
 
-function createRoutes(particles: IndonesiaPointData, count: number, random: () => number) {
+export function createMovementSceneData(pathCount: number, ambientCount: number): MovementSceneData {
+  const random = seededRandom(17082026 + pathCount * 31);
+  const segmentCount = 48;
+  const verticesPerPath = segmentCount * 2;
+  const trailPositions = new Float32Array(pathCount * verticesPerPath * 3);
+  const alignedTrailPositions = new Float32Array(pathCount * verticesPerPath * 3);
+  const trailAlong = new Float32Array(pathCount * verticesPerPath);
+  const trailBranches = new Float32Array(pathCount * verticesPerPath);
+  const trailTiers = new Float32Array(pathCount * verticesPerPath);
   const routes: MovementRoute[] = [];
-  const segmentCount = 26;
-  const trailPositions = new Float32Array(count * segmentCount * 6);
-  let trailWrite = 0;
+  let positionWrite = 0;
+  let attributeWrite = 0;
 
-  for (let routeIndex = 0; routeIndex < count; routeIndex += 1) {
-    const groups = routeGroups[routeIndex % routeGroups.length];
-    const start = pointAtGroupFraction(particles, groups[0], (0.17 + routeIndex * 0.37) % 0.96);
-    const end = pointAtGroupFraction(particles, groups[1], (0.63 + routeIndex * 0.29) % 0.96);
-    const dx = end[0] - start[0];
-    const dy = end[1] - start[1];
-    const distance = Math.hypot(dx, dy);
-    const bend = (routeIndex % 2 === 0 ? 1 : -1) * (0.1 + Math.min(0.38, distance * 0.055));
-    const controlX = (start[0] + end[0]) * 0.5 - dy * bend;
-    const controlY = (start[1] + end[1]) * 0.5 + dx * bend;
-    const controlZ = 0.18 + Math.min(0.42, distance * 0.07);
+  for (let pathIndex = 0; pathIndex < pathCount; pathIndex += 1) {
+    const tier = pathIndex === 0 ? 0 : pathIndex < 8 ? 1 : 2;
+    const branch = pathIndex === 0 ? 0 : 0.12 + Math.pow(pathIndex / pathCount, 0.72) * 0.31;
+    const direction = random() * Math.PI * 2;
+    const horizontalReach = tier === 1 ? 3.2 + random() * 3.4 : 2.1 + random() * 5.2;
+    const verticalReach = tier === 1 ? 1.25 + random() * 2 : 0.8 + random() * 3.1;
+    const directionX = Math.cos(direction) * horizontalReach;
+    const directionY = Math.sin(direction) * verticalReach;
+    const bend = (random() - 0.5) * (tier === 1 ? 1.2 : 2.4);
+    const wave = random() * Math.PI * 2;
+    const laneX = ((pathIndex % 13) - 6) * 0.34;
+    const laneY = ((Math.floor(pathIndex / 13) % 9) - 4) * 0.27;
     const points = new Float32Array((segmentCount + 1) * 3);
+    const alignedPoints = new Float32Array((segmentCount + 1) * 3);
 
     for (let step = 0; step <= segmentCount; step += 1) {
       const t = step / segmentCount;
-      const inverse = 1 - t;
-      const offset = step * 3;
-      points[offset] = inverse * inverse * start[0] + 2 * inverse * t * controlX + t * t * end[0];
-      points[offset + 1] = inverse * inverse * start[1] + 2 * inverse * t * controlY + t * t * end[1];
-      points[offset + 2] = inverse * inverse * start[2] + 2 * inverse * t * controlZ + t * t * end[2];
+      const divergence = smoothstep(0.04 + branch * 0.18, 0.78, t);
+      const depth = 1.3 - t * 22;
+      const pointOffset = step * 3;
+      points[pointOffset] = directionX * divergence + Math.sin(t * Math.PI * 1.6 + wave) * bend * t;
+      points[pointOffset + 1] = directionY * divergence + Math.sin(t * Math.PI * 2.2 + wave * 0.5) * 0.42 * t;
+      points[pointOffset + 2] = depth + Math.cos(t * Math.PI * 1.3 + wave) * 0.25 * t;
+      alignedPoints[pointOffset] = laneX + Math.sin(t * Math.PI + wave) * 0.11;
+      alignedPoints[pointOffset + 1] = laneY + Math.sin(t * Math.PI * 1.5 + wave) * 0.08;
+      alignedPoints[pointOffset + 2] = depth;
 
-      if (step > 0) {
-        const previous = offset - 3;
-        trailPositions[trailWrite] = points[previous];
-        trailPositions[trailWrite + 1] = points[previous + 1];
-        trailPositions[trailWrite + 2] = points[previous + 2];
-        trailPositions[trailWrite + 3] = points[offset];
-        trailPositions[trailWrite + 4] = points[offset + 1];
-        trailPositions[trailWrite + 5] = points[offset + 2];
-        trailWrite += 6;
+      if (step === 0) continue;
+      const previousOffset = pointOffset - 3;
+      for (const sourceOffset of [previousOffset, pointOffset]) {
+        trailPositions[positionWrite] = points[sourceOffset];
+        trailPositions[positionWrite + 1] = points[sourceOffset + 1];
+        trailPositions[positionWrite + 2] = points[sourceOffset + 2];
+        alignedTrailPositions[positionWrite] = alignedPoints[sourceOffset];
+        alignedTrailPositions[positionWrite + 1] = alignedPoints[sourceOffset + 1];
+        alignedTrailPositions[positionWrite + 2] = alignedPoints[sourceOffset + 2];
+        positionWrite += 3;
+        trailAlong[attributeWrite] = (step - (sourceOffset === previousOffset ? 1 : 0)) / segmentCount;
+        trailBranches[attributeWrite] = branch;
+        trailTiers[attributeWrite] = tier;
+        attributeWrite += 1;
       }
     }
 
-    routes.push({ points, speed: 0.035 + random() * 0.035, offset: random() });
-  }
-
-  return { routes, trailPositions };
-}
-
-export function createMovementSceneData(
-  particleCount: number,
-  trailCount: number,
-  ambientCount: number,
-): MovementSceneData {
-  const random = seededRandom(17082026 + particleCount + trailCount);
-  const particles = createIndonesiaPointData(particleCount);
-  const activations = new Float32Array(particleCount);
-  const movementDirections = new Float32Array(particleCount * 3);
-
-  for (let index = 0; index < particleCount; index += 1) {
-    const offset = index * 3;
-    const angle = random() * Math.PI * 2;
-    activations[index] = random();
-    movementDirections[offset] = Math.cos(angle) * (0.018 + random() * 0.045);
-    movementDirections[offset + 1] = Math.sin(angle) * (0.018 + random() * 0.035);
-    movementDirections[offset + 2] = 0.035 + random() * 0.11;
+    routes.push({
+      points,
+      alignedPoints,
+      speed: 0.055 + random() * 0.075,
+      offset: random(),
+    });
   }
 
   const ambientPositions = new Float32Array(ambientCount * 3);
   const ambientSeeds = new Float32Array(ambientCount);
   for (let index = 0; index < ambientCount; index += 1) {
     const offset = index * 3;
-    ambientPositions[offset] = (random() - 0.5) * 10;
-    ambientPositions[offset + 1] = (random() - 0.5) * 5.8;
-    ambientPositions[offset + 2] = -0.5 + random() * 1.5;
+    ambientPositions[offset] = (random() - 0.5) * 15;
+    ambientPositions[offset + 1] = (random() - 0.5) * 8;
+    ambientPositions[offset + 2] = 1 - random() * 24;
     ambientSeeds[index] = random();
   }
 
-  const routeData = createRoutes(particles, trailCount, random);
   return {
-    particles,
-    activations,
-    movementDirections,
-    trailPositions: routeData.trailPositions,
-    routes: routeData.routes,
+    routes,
+    trailPositions,
+    alignedTrailPositions,
+    trailAlong,
+    trailBranches,
+    trailTiers,
     ambientPositions,
     ambientSeeds,
   };

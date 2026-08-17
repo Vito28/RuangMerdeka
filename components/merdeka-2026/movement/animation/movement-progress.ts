@@ -1,26 +1,24 @@
 import type { PerformanceTier } from "../../hero/types";
 
 export const MOVEMENT_PHASES = {
-  opening: [0, 0.14],
-  notOnePerson: [0.14, 0.27],
-  notOnePlace: [0.27, 0.4],
-  bridge: [0.4, 0.46],
-  brave: [0.46, 0.525],
-  diverse: [0.525, 0.59],
-  creative: [0.59, 0.655],
-  empowered: [0.655, 0.72],
-  moving: [0.72, 0.8],
+  seed: [0, 0.12],
+  opening: [0.12, 0.3],
+  millions: [0.3, 0.48],
+  people: [0.48, 0.72],
+  directions: [0.72, 0.8],
   together: [0.8, 0.9],
-  closing: [0.9, 1],
+  pulse: [0.9, 0.97],
+  exit: [0.97, 1],
 } as const;
 
 export const MOVEMENT_CONFIG: Record<
-  "particles" | "trails" | "ambient" | "dpr",
+  "paths" | "tracers" | "ambient" | "stories" | "dpr",
   Record<PerformanceTier, number>
 > = {
-  particles: { high: 7200, medium: 4600, low: 2200 },
-  trails: { high: 18, medium: 11, low: 6 },
-  ambient: { high: 90, medium: 56, low: 28 },
+  paths: { high: 148, medium: 92, low: 48 },
+  tracers: { high: 126, medium: 76, low: 38 },
+  ambient: { high: 96, medium: 58, low: 28 },
+  stories: { high: 6, medium: 6, low: 4 },
   dpr: { high: 1.5, medium: 1.25, low: 1 },
 };
 

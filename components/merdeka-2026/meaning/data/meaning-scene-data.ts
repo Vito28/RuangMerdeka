@@ -1,15 +1,65 @@
+import * as THREE from "three";
+
 import { createIndonesiaPointData, type IndonesiaPointData } from "../../hero/data/indonesia-points";
 
 export type MeaningSceneData = {
   particles: IndonesiaPointData;
-  justiceOffsets: Float32Array;
-  growthValues: Float32Array;
-  nodePositions: Float32Array;
-  nodeColors: Float32Array;
-  connectionPositions: Float32Array;
-  growthPositions: Float32Array;
-  growthHeights: Float32Array;
+  flowTargets: Float32Array;
+  flowAngles: Float32Array;
+  flowAccents: Float32Array;
+  flowPhases: Float32Array;
+  structurePositions: Float32Array;
+  structureHeights: Float32Array;
+  structureKinds: Float32Array;
+  pulsePositions: Float32Array;
+  pulseConnections: Float32Array;
+  pulseConnectionBuild: Float32Array;
+  pulseConnectionPath: Float32Array;
+  pulseDistances: Float32Array;
 };
+
+type FrameworkPiece = readonly [x: number, y: number, z: number, length: number, kind: number];
+type ScenePoint = readonly [x: number, y: number, z: number];
+
+const FRAMEWORK_BLUEPRINT: FrameworkPiece[] = [
+  [-3.45, -1.2, 0.2, 1.55, 0],
+  [-2.9, -1.2, -0.2, 2.25, 0],
+  [-3.18, -0.56, 0.02, 0.72, 1],
+  [-2.25, -1.2, 0.32, 1.78, 0],
+  [-2.58, 0.2, 0.06, 0.82, 1],
+  [-1.45, -1.2, -0.12, 2.65, 0],
+  [-0.7, -1.2, 0.26, 1.96, 0],
+  [-1.08, -0.12, 0.04, 0.95, 1],
+  [0.05, -1.2, -0.24, 2.35, 0],
+  [0.75, -1.2, 0.2, 1.62, 0],
+  [0.38, 0.02, -0.02, 0.9, 1],
+  [1.5, -1.2, -0.08, 2.55, 0],
+  [2.18, -1.2, 0.27, 1.88, 0],
+  [1.84, -0.35, 0.06, 0.82, 1],
+  [2.86, -1.2, -0.18, 2.25, 0],
+  [3.45, -1.2, 0.18, 1.48, 0],
+  [3.16, 0.05, 0, 0.76, 1],
+  [0.02, 0.83, -0.18, 2.95, 2],
+];
+
+const HOPE_STAR_BLUEPRINT: ScenePoint[] = [
+  ...Array.from({ length: 10 }, (_, index): ScenePoint => {
+    const angle = Math.PI / 2 + index * (Math.PI / 5);
+    const radius = index % 2 === 0 ? 1.6 : 0.68;
+    return [
+      0.85 + Math.cos(angle) * radius,
+      0.45 + Math.sin(angle) * radius,
+      index % 2 === 0 ? 0.04 : -0.04,
+    ];
+  }),
+  [0.85, 0.45, 0.16],
+];
+
+const HOPE_STAR_EDGES = [
+  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5],
+  [5, 6], [6, 7], [7, 8], [8, 9], [9, 0],
+  [10, 0], [10, 2], [10, 4], [10, 6], [10, 8],
+] as const;
 
 function seededRandom(seed: number) {
   let value = seed >>> 0;
@@ -19,120 +69,123 @@ function seededRandom(seed: number) {
   };
 }
 
-function pickDistributedIndex(slot: number, slots: number, count: number, random: () => number) {
-  const rangeStart = Math.floor((slot / slots) * count);
-  const rangeEnd = Math.max(rangeStart + 1, Math.floor(((slot + 1) / slots) * count));
-  return Math.min(count - 1, rangeStart + Math.floor(random() * (rangeEnd - rangeStart)));
-}
+function createPulseConnections(positions: Float32Array) {
+  const pointCount = positions.length / 3;
+  const validEdges = HOPE_STAR_EDGES.filter(([start, end]) => start < pointCount && end < pointCount);
+  const connectionPositions: number[] = [];
+  const connectionBuild: number[] = [];
+  const connectionPath: number[] = [];
+  const samples = 14;
 
-function createConnections(nodePositions: Float32Array) {
-  const nodeCount = nodePositions.length / 3;
-  const pairs = new Set<string>();
+  validEdges.forEach(([startIndex, endIndex], edgeIndex) => {
+    const startOffset = startIndex * 3;
+    const endOffset = endIndex * 3;
+    const start = new THREE.Vector3(
+      positions[startOffset],
+      positions[startOffset + 1],
+      positions[startOffset + 2],
+    );
+    const end = new THREE.Vector3(
+      positions[endOffset],
+      positions[endOffset + 1],
+      positions[endOffset + 2],
+    );
+    const points = Array.from({ length: samples + 1 }, (_, index) => (
+      start.clone().lerp(end, index / samples)
+    ));
 
-  for (let index = 0; index < nodeCount; index += 1) {
-    const distances: Array<{ index: number; distance: number }> = [];
-    const offset = index * 3;
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const localProgress = index / (points.length - 1);
+      const nextProgress = (index + 1) / (points.length - 1);
+      const buildStart = edgeIndex / Math.max(1, validEdges.length - 1);
+      const startPath = THREE.MathUtils.clamp((points[index].x + 0.85) / 3.4, 0, 1);
+      const endPath = THREE.MathUtils.clamp((points[index + 1].x + 0.85) / 3.4, 0, 1);
 
-    for (let candidate = 0; candidate < nodeCount; candidate += 1) {
-      if (candidate === index) continue;
-      const candidateOffset = candidate * 3;
-      const distance = Math.hypot(
-        nodePositions[offset] - nodePositions[candidateOffset],
-        nodePositions[offset + 1] - nodePositions[candidateOffset + 1],
+      connectionPositions.push(...points[index].toArray(), ...points[index + 1].toArray());
+      connectionBuild.push(
+        buildStart * 0.7 + localProgress * 0.3,
+        buildStart * 0.7 + nextProgress * 0.3,
       );
-      distances.push({ index: candidate, distance });
+      connectionPath.push(startPath, endPath);
     }
+  });
 
-    distances.sort((a, b) => a.distance - b.distance);
-    const connectionCount = index % 4 === 0 ? 2 : 1;
-
-    for (let connection = 0; connection < connectionCount; connection += 1) {
-      const candidate = distances[connection]?.index;
-      if (candidate === undefined) continue;
-      const low = Math.min(index, candidate);
-      const high = Math.max(index, candidate);
-      pairs.add(`${low}:${high}`);
-    }
-  }
-
-  const positions = new Float32Array(pairs.size * 6);
-  let writeIndex = 0;
-
-  for (const pair of pairs) {
-    const [start, end] = pair.split(":").map(Number);
-    const startOffset = start * 3;
-    const endOffset = end * 3;
-
-    positions[writeIndex] = nodePositions[startOffset];
-    positions[writeIndex + 1] = nodePositions[startOffset + 1];
-    positions[writeIndex + 2] = 0.035;
-    positions[writeIndex + 3] = nodePositions[endOffset];
-    positions[writeIndex + 4] = nodePositions[endOffset + 1];
-    positions[writeIndex + 5] = 0.035;
-    writeIndex += 6;
-  }
-
-  return positions;
+  return {
+    positions: new Float32Array(connectionPositions),
+    build: new Float32Array(connectionBuild),
+    path: new Float32Array(connectionPath),
+  };
 }
 
-export function createMeaningSceneData(
-  particleCount: number,
-  nodeCount: number,
-  growthCount: number,
-): MeaningSceneData {
-  const random = seededRandom(19452026 + particleCount);
+export function createMeaningSceneData(particleCount: number, structureCount: number): MeaningSceneData {
+  const random = seededRandom(17081945 + particleCount + structureCount);
   const particles = createIndonesiaPointData(particleCount);
-  const justiceOffsets = new Float32Array(particleCount * 3);
-  const growthValues = new Float32Array(particleCount);
+  const flowTargets = new Float32Array(particleCount * 3);
+  const flowAngles = new Float32Array(particleCount);
+  const flowAccents = new Float32Array(particleCount);
+  const flowPhases = new Float32Array(particleCount);
 
   for (let index = 0; index < particleCount; index += 1) {
     const offset = index * 3;
-    const angle = random() * Math.PI * 2;
-    const radius = random() * 0.075;
-    justiceOffsets[offset] = Math.cos(angle) * radius;
-    justiceOffsets[offset + 1] = Math.sin(angle) * radius;
-    justiceOffsets[offset + 2] = (random() - 0.5) * 0.16;
-    growthValues[index] = Math.pow(random(), 2.2);
+    const sourceX = particles.positions[offset];
+    const sourceY = particles.positions[offset + 1];
+    const side = Math.abs(sourceX) > 0.12 ? Math.sign(sourceX) : index % 2 === 0 ? 1 : -1;
+    const reach = 0.9 + Math.pow(random(), 0.72) * 4.25;
+    const upperFlow = index % 5 !== 0;
+    const arc = Math.pow(reach / 5.15, 0.78) * (upperFlow ? 2.25 : -1.05);
+    const targetX = side * reach;
+    const targetY = -0.22 + arc + (random() - 0.5) * 0.38 + side * 0.07;
+    const targetZ = (random() - 0.5) * (2.2 + reach * 0.42);
+
+    flowTargets[offset] = targetX;
+    flowTargets[offset + 1] = targetY;
+    flowTargets[offset + 2] = targetZ;
+    flowAngles[index] = Math.atan2(targetY - sourceY, targetX - sourceX);
+    flowAccents[index] = random() < (reach > 3.5 ? 0.31 : 0.15) ? 1 : 0;
+    flowPhases[index] = random();
   }
 
-  const nodePositions = new Float32Array(nodeCount * 3);
-  const nodeColors = new Float32Array(nodeCount * 3);
+  const selectedPieces = FRAMEWORK_BLUEPRINT.slice(0, Math.min(structureCount, FRAMEWORK_BLUEPRINT.length));
+  const structurePositions = new Float32Array(selectedPieces.length * 3);
+  const structureHeights = new Float32Array(selectedPieces.length);
+  const structureKinds = new Float32Array(selectedPieces.length);
 
-  for (let index = 0; index < nodeCount; index += 1) {
-    const sourceIndex = pickDistributedIndex(index, nodeCount, particleCount, random);
-    const sourceOffset = sourceIndex * 3;
+  selectedPieces.forEach(([x, y, z, length, kind], index) => {
     const offset = index * 3;
-    nodePositions[offset] = particles.positions[sourceOffset];
-    nodePositions[offset + 1] = particles.positions[sourceOffset + 1];
-    nodePositions[offset + 2] = 0.05 + random() * 0.035;
+    structurePositions[offset] = x;
+    structurePositions[offset + 1] = y;
+    structurePositions[offset + 2] = z;
+    structureHeights[index] = length;
+    structureKinds[index] = kind;
+  });
 
-    const isRed = random() > 0.78;
-    nodeColors[offset] = isRed ? 0.906 : 0.957;
-    nodeColors[offset + 1] = isRed ? 0 : 0.945;
-    nodeColors[offset + 2] = isRed ? 0.067 : 0.918;
-  }
+  const nodeCount = HOPE_STAR_BLUEPRINT.length;
+  const pulsePositions = new Float32Array(nodeCount * 3);
+  const pulseDistances = new Float32Array(nodeCount);
 
-  const growthPositions = new Float32Array(growthCount * 3);
-  const growthHeights = new Float32Array(growthCount);
-
-  for (let index = 0; index < growthCount; index += 1) {
-    const sourceIndex = pickDistributedIndex(index, growthCount, particleCount, random);
-    const sourceOffset = sourceIndex * 3;
+  HOPE_STAR_BLUEPRINT.forEach(([x, y, z], index) => {
     const offset = index * 3;
-    growthPositions[offset] = particles.positions[sourceOffset];
-    growthPositions[offset + 1] = particles.positions[sourceOffset + 1];
-    growthPositions[offset + 2] = 0.04;
-    growthHeights[index] = 0.12 + random() * 0.42;
-  }
+    pulsePositions[offset] = x;
+    pulsePositions[offset + 1] = y;
+    pulsePositions[offset + 2] = z;
+    pulseDistances[index] = THREE.MathUtils.clamp((x + 0.85) / 3.4, 0, 1);
+  });
+
+  const connections = createPulseConnections(pulsePositions);
 
   return {
     particles,
-    justiceOffsets,
-    growthValues,
-    nodePositions,
-    nodeColors,
-    connectionPositions: createConnections(nodePositions),
-    growthPositions,
-    growthHeights,
+    flowTargets,
+    flowAngles,
+    flowAccents,
+    flowPhases,
+    structurePositions,
+    structureHeights,
+    structureKinds,
+    pulsePositions,
+    pulseConnections: connections.positions,
+    pulseConnectionBuild: connections.build,
+    pulseConnectionPath: connections.path,
+    pulseDistances,
   };
 }
