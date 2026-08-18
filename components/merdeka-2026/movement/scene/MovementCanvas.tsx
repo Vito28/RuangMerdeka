@@ -8,7 +8,6 @@ import { useDevicePerformance } from "../../hero/hooks/use-device-performance";
 import { MOVEMENT_CONFIG, mapMovementProgress } from "../animation/movement-progress";
 import { createMovementSceneData } from "../data/movement-scene-data";
 import type { MovementCanvasProps, MovementProgressRef } from "../types";
-import { HumanStoryFrames } from "./HumanStoryFrames";
 import { MovementAtmosphere } from "./MovementAtmosphere";
 import { MovementPulse } from "./MovementPulse";
 import { MovementTrails } from "./MovementTrails";
@@ -66,7 +65,12 @@ function MovementCamera({ progressRef }: { progressRef: MovementProgressRef }) {
 function MovementScene({ progressRef }: Pick<MovementCanvasProps, "progressRef">) {
   const tier = useDevicePerformance();
   const data = useMemo(
-    () => createMovementSceneData(MOVEMENT_CONFIG.paths[tier], MOVEMENT_CONFIG.ambient[tier]),
+    () => createMovementSceneData(
+      MOVEMENT_CONFIG.majorPaths[tier],
+      MOVEMENT_CONFIG.secondaryPaths[tier],
+      MOVEMENT_CONFIG.signals[tier],
+      MOVEMENT_CONFIG.dust[tier],
+    ),
     [tier],
   );
 
@@ -81,8 +85,7 @@ function MovementScene({ progressRef }: Pick<MovementCanvasProps, "progressRef">
         progressRef={progressRef}
         tracerCount={MOVEMENT_CONFIG.tracers[tier]}
       />
-      <HumanStoryFrames progressRef={progressRef} storyCount={MOVEMENT_CONFIG.stories[tier]} />
-      <MovementPulse data={data} progressRef={progressRef} />
+      <MovementPulse data={data} pixelRatio={MOVEMENT_CONFIG.dpr[tier]} progressRef={progressRef} />
     </>
   );
 }

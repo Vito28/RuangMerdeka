@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { HUMAN_STORIES } from "./data/human-stories";
+import { HumanStoryScene, ReducedHumanStories } from "./human-stories/HumanStoryScene";
 
 function MaskedLine({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -14,7 +14,7 @@ export function MovementContent() {
     <div className="pointer-events-none absolute inset-0 z-20 px-5 pb-7 pt-20 md:px-10 md:pb-10 md:pt-24 lg:px-16">
       <div className="flex items-center justify-between border-b border-bone/12 pb-4 font-mono text-[8px] tracking-[0.22em] text-bone/42 md:text-[9px]">
         <p><span className="mr-3 text-red-flag">03</span>SECTION</p>
-        <p>DENYUT SEBUAH BANGSA</p>
+        <p>GERAK KITA</p>
       </div>
 
       <p
@@ -46,24 +46,7 @@ export function MovementContent() {
         </div>
       </article>
 
-      <ol className="absolute inset-x-5 bottom-10 top-36 md:inset-x-10 md:bottom-12 md:top-40 lg:inset-x-16" aria-label="Kisah gerak manusia Indonesia">
-        {HUMAN_STORIES.map((story, index) => (
-          <li
-            key={story.label}
-            className={`absolute inset-y-0 flex w-full items-end pb-[12vh] opacity-0 md:w-[43%] md:items-center md:pb-0 ${index % 2 === 0 ? "left-0 text-left" : "right-0 text-right md:justify-end"}`}
-            data-movement-story={index}
-          >
-            <div>
-              <p className="mb-3 font-mono text-[8px] tracking-[0.24em] text-bone/42 md:text-[9px]">
-                <span className="mr-3 text-red-flag">{story.index}</span>{story.context}
-              </p>
-              <p className="max-w-[13ch] text-[clamp(2.15rem,5vw,5.2rem)] font-semibold uppercase leading-[0.88] tracking-[-0.06em] md:max-w-[10ch]">
-                {story.label.slice(0, -1)}<span className="text-red-flag">.</span>
-              </p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <HumanStoryScene />
 
       <div className="absolute inset-x-5 bottom-10 top-36 flex items-center opacity-0 md:inset-x-10 md:bottom-12 md:top-40 lg:inset-x-16" data-movement-directions>
         <div className="w-full">
@@ -92,7 +75,7 @@ export function MovementContent() {
         <p className="hidden font-mono text-[8px] tracking-[0.24em] text-red-flag/75 md:block md:text-[9px]">03 → 04</p>
       </div>
 
-      <div className="absolute inset-x-5 bottom-7 flex justify-between border-t border-bone/12 pt-3 font-mono text-[7px] tracking-[0.2em] text-bone/30 md:inset-x-10 md:bottom-10 md:text-[8px] lg:inset-x-16">
+      <div className="absolute inset-x-5 bottom-7 flex justify-between border-t border-bone/12 pt-3 font-mono text-[7px] tracking-[0.2em] text-bone/40 md:inset-x-10 md:bottom-10 md:text-[8px] lg:inset-x-16">
         <p>KEMAJUAN LAHIR DARI GERAK SEHARI-HARI</p>
         <p className="hidden md:block">INDONESIA TIDAK PERNAH DIAM</p>
       </div>
@@ -104,7 +87,7 @@ export function ReducedMovementContent() {
   return (
     <section id="movement" aria-label="Indonesia terus bergerak" className="bg-night px-5 py-24 text-bone md:px-10 md:py-32 lg:px-16">
       <div className="flex items-center justify-between border-b border-bone/15 pb-4 font-mono text-[9px] tracking-[0.2em] text-bone/45">
-        <p><span className="mr-3 text-red-flag">03</span>SECTION</p><p>DENYUT SEBUAH BANGSA</p>
+        <p><span className="mr-3 text-red-flag">03</span>SECTION</p><p>GERAK KITA</p>
       </div>
 
       <h2 className="py-24 text-[clamp(3.8rem,10vw,9rem)] font-semibold uppercase leading-[0.78] tracking-[-0.078em]">
@@ -115,14 +98,7 @@ export function ReducedMovementContent() {
         TETAPI KARENA <span className="text-red-flag">JUTAAN GERAK</span><br />YANG TERJADI BERSAMA.
       </p>
 
-      <ol className="grid gap-px bg-bone/15 md:grid-cols-2">
-        {HUMAN_STORIES.map((story) => (
-          <li key={story.label} className="bg-night py-16 md:px-8">
-            <p className="mb-3 font-mono text-[8px] tracking-[0.2em] text-bone/42"><span className="mr-3 text-red-flag">{story.index}</span>{story.context}</p>
-            <p className="text-[clamp(2.5rem,5vw,5rem)] font-semibold uppercase leading-[0.86] tracking-[-0.06em]">{story.label}</p>
-          </li>
-        ))}
-      </ol>
+      <ReducedHumanStories />
 
       <p className="pt-28 text-center uppercase leading-[0.78] tracking-[-0.08em]">
         <span className="block text-[clamp(2.6rem,6vw,6rem)]">YANG BERGERAK</span>

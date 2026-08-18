@@ -12,13 +12,14 @@ export const MOVEMENT_PHASES = {
 } as const;
 
 export const MOVEMENT_CONFIG: Record<
-  "paths" | "tracers" | "ambient" | "stories" | "dpr",
+  "majorPaths" | "secondaryPaths" | "signals" | "dust" | "tracers" | "dpr",
   Record<PerformanceTier, number>
 > = {
-  paths: { high: 148, medium: 92, low: 48 },
-  tracers: { high: 126, medium: 76, low: 38 },
-  ambient: { high: 96, medium: 58, low: 28 },
-  stories: { high: 6, medium: 6, low: 4 },
+  majorPaths: { high: 12, medium: 10, low: 8 },
+  secondaryPaths: { high: 20, medium: 14, low: 10 },
+  signals: { high: 380, medium: 270, low: 170 },
+  dust: { high: 1100, medium: 760, low: 440 },
+  tracers: { high: 34, medium: 26, low: 18 },
   dpr: { high: 1.5, medium: 1.25, low: 1 },
 };
 

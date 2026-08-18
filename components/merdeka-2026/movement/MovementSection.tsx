@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "../hero/hooks/use-reduced-motion";
-import { HUMAN_STORIES } from "./data/human-stories";
+import { addHumanStoryTimelines, prepareHumanStoryStates } from "./animation/human-story-timeline";
 import { MovementContent, ReducedMovementContent } from "./MovementContent";
 
 const MovementCanvas = dynamic(() => import("./scene/MovementCanvas"), { ssr: false });
@@ -31,10 +31,12 @@ export function MovementSection() {
     gsap.registerPlugin(ScrollTrigger);
 
     const context = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
       gsap.set("[data-movement-opening]", { opacity: 0, transformPerspective: 900 });
       gsap.set("[data-movement-opening-line]", { yPercent: 112, rotateX: -16, transformOrigin: "50% 100%" });
       gsap.set("[data-movement-million-line]", { yPercent: 110 });
       gsap.set("[data-movement-together-word]", { yPercent: 108, scaleX: 0.93 });
+      prepareHumanStoryStates();
 
       const timeline = gsap.timeline({
         scrollTrigger: {
@@ -51,21 +53,16 @@ export function MovementSection() {
         .fromTo("[data-movement-seed-copy]", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.025, ease: "none" }, 0.02)
         .to("[data-movement-seed-copy]", { opacity: 0, x: 18, duration: 0.025, ease: "none" }, 0.095)
         .to("[data-movement-opening]", { opacity: 1, duration: 0.018, ease: "none" }, 0.12)
-        .to("[data-movement-opening-line]", { yPercent: 0, rotateX: 0, duration: 0.047, stagger: 0.012, ease: "none" }, 0.122)
+        .to("[data-movement-opening-line]", { yPercent: 0, rotateX: 0, duration: 0.032, stagger: 0.008, ease: "none" }, 0.122)
         .fromTo("[data-movement-opening-eyebrow]", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.035, ease: "none" }, 0.13)
         .fromTo("[data-movement-terus]", { xPercent: -18 }, { xPercent: 0, duration: 0.045, ease: "none" }, 0.155)
         .fromTo("[data-movement-bergerak]", { letterSpacing: "-0.13em" }, { letterSpacing: "-0.082em", duration: 0.055, ease: "none" }, 0.175)
         .to("[data-movement-opening]", { opacity: 0, scale: 1.08, y: -20, duration: 0.035, ease: "none" }, 0.265)
         .fromTo("[data-movement-millions]", { opacity: 0, scale: 0.965 }, { opacity: 1, scale: 1, duration: 0.04, ease: "none" }, 0.3)
-        .to("[data-movement-million-line]", { yPercent: 0, duration: 0.052, ease: "none" }, 0.315)
+        .to("[data-movement-million-line]", { yPercent: 0, duration: 0.035, ease: "none" }, 0.31)
         .to("[data-movement-millions]", { opacity: 0, scale: 1.035, duration: 0.035, ease: "none" }, 0.445);
 
-      HUMAN_STORIES.forEach((story, index) => {
-        const selector = `[data-movement-story="${index}"]`;
-        timeline
-          .fromTo(selector, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.014, ease: "none" }, story.phase[0])
-          .to(selector, { opacity: 0, y: -18, duration: 0.013, ease: "none" }, story.phase[1] - 0.013);
-      });
+      addHumanStoryTimelines(timeline, isMobile);
 
       timeline
         .fromTo("[data-movement-directions]", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.025, ease: "none" }, 0.72)
