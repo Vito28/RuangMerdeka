@@ -15,9 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ruang Merdeka — An Annual Digital Experience",
+  title: {
+    default: "Hari Kita — Setiap Hari Punya Cerita",
+    template: "%s | Hari Kita",
+  },
   description:
-    "Arsip digital tahunan untuk melihat, merasakan, dan membayangkan Indonesia dari perspektif yang berbeda.",
+    "Arsip digital perayaan, budaya, dan momen besar yang kita bagi bersama dari tahun ke tahun.",
+  icons: {
+    icon: [{ url: "/logo.webp", type: "image/webp" }],
+    shortcut: [{ url: "/logo.webp", type: "image/webp" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
