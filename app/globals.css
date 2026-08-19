@@ -72,6 +72,49 @@ button {
   -webkit-text-stroke: 1px rgb(244 241 234 / 0.28);
 }
 
+.hari-paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+}
+
+.soundtrack-equalizer {
+  display: inline-flex;
+  height: 0.75rem;
+  align-items: center;
+  gap: 2px;
+}
+
+.soundtrack-equalizer > span {
+  width: 1px;
+  height: 35%;
+  transform-origin: center;
+  background: currentColor;
+  opacity: 0.48;
+}
+
+.soundtrack-equalizer.is-playing > span {
+  animation: soundtrack-pulse 0.9s var(--ease-cinematic) infinite alternate;
+  color: var(--color-red-highlight);
+  opacity: 0.9;
+}
+
+.soundtrack-equalizer.is-playing > span:nth-child(2) {
+  animation-delay: -0.38s;
+}
+
+.soundtrack-equalizer.is-playing > span:nth-child(3) {
+  animation-delay: -0.67s;
+}
+
+@keyframes soundtrack-pulse {
+  from {
+    transform: scaleY(0.35);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
