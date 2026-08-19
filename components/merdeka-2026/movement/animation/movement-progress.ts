@@ -6,9 +6,10 @@ export const MOVEMENT_PHASES = {
   millions: [0.3, 0.48],
   people: [0.48, 0.72],
   directions: [0.72, 0.8],
-  together: [0.8, 0.9],
-  pulse: [0.9, 0.97],
-  exit: [0.97, 1],
+  together: [0.8, 0.875],
+  collective: [0.865, 0.955],
+  trace: [0.93, 0.985],
+  exit: [0.978, 1],
 } as const;
 
 export const MOVEMENT_CONFIG: Record<
