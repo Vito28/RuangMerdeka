@@ -70,7 +70,7 @@ export function HeroSection({ onExitProgress }: HeroSectionProps) {
       });
 
       scrollTimeline
-        .to("[data-progress-line]", { scaleY: 1, duration: 1, ease: "none" }, 0)
+        .to("[data-hero-metadata]", { opacity: 0.14, y: -8, duration: 0.09, ease: "none" }, 0.035)
         .to("[data-scroll-indicator]", { opacity: 0, duration: 0.04, ease: "none" }, 0.04)
         .to("[data-opening]", { opacity: 0, scale: 1.035, duration: 0.05, ease: "none" }, 0.13)
         .fromTo("[data-one-nation]", { y: 35 }, { opacity: 1, y: 0, duration: 0.035, ease: "none" }, 0.175)
@@ -103,8 +103,9 @@ export function HeroSection({ onExitProgress }: HeroSectionProps) {
   return (
     <section
       ref={sectionRef}
+      id="opening"
       aria-label="Pembukaan 81 Tahun Merdeka"
-      className="relative min-h-[180svh] bg-night text-bone md:min-h-[220svh] lg:min-h-[260svh]"
+      className="relative min-h-[170svh] bg-night text-bone md:min-h-[220svh] lg:min-h-[260svh]"
     >
       <div className="sticky top-0 h-svh overflow-hidden bg-night">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
@@ -126,9 +127,6 @@ export function HeroSection({ onExitProgress }: HeroSectionProps) {
           </div>
         </div>
 
-        <div aria-hidden="true" className="absolute bottom-6 right-5 top-24 z-40 hidden w-px bg-white/12 md:block lg:right-8">
-          <span className="block h-full w-px origin-top scale-y-0 bg-red-flag" data-progress-line />
-        </div>
         <div aria-hidden="true" className="film-grain pointer-events-none absolute inset-0 z-50 opacity-[0.04] mix-blend-soft-light" />
       </div>
     </section>

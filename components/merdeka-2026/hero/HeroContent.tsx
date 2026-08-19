@@ -17,7 +17,7 @@ export function HeroContent() {
             </div>
 
             <h1 className="text-center font-semibold uppercase tracking-[-0.085em]">
-              <span className="block text-[clamp(10rem,34vw,30rem)] leading-[0.68] opacity-0" data-opening-81>
+              <span className="block px-2 text-[clamp(8.25rem,34vw,30rem)] leading-[0.8] opacity-0 md:px-0 md:leading-[0.68]" data-opening-81>
                 81
               </span>
               <span className="mt-5 block text-[clamp(1.45rem,3.5vw,3.2rem)] leading-none tracking-[0.06em] opacity-0 md:mt-3" data-opening-title>
@@ -54,7 +54,7 @@ export function HeroContent() {
       </div>
 
       <div className="absolute inset-0 flex items-end px-5 pb-24 opacity-0 md:px-10 md:pb-20 lg:px-16" data-closing>
-        <div className="grid w-full grid-cols-4 gap-x-4 border-t border-white/20 pt-6 md:grid-cols-8 lg:grid-cols-12">
+        <div className="grid w-full grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12">
           <p className="col-span-3 text-sm leading-6 text-white/45 md:col-span-3 md:text-base">
             Bukan hanya tentang masa lalu.
           </p>
