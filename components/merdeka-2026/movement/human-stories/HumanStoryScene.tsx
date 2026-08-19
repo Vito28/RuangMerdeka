@@ -88,7 +88,7 @@ export function HumanStoryScene() {
 
 export function ReducedHumanStories() {
   return (
-    <ol className="divide-y divide-bone/15 border-y border-bone/15">
+    <ol className="space-y-24 md:space-y-32">
       {HUMAN_STORIES.map((story, index) => (
         <li
           key={story.motif}
