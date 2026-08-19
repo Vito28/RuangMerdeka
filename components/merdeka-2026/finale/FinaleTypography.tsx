@@ -7,11 +7,6 @@ export function FinaleTypography({ reducedMotion = false }: FinaleTypographyProp
 
   return (
     <div className="pointer-events-none absolute inset-0 z-20 px-5 md:px-10 lg:px-16">
-      <div className="absolute inset-x-5 top-20 flex items-center justify-between border-b border-bone/12 pb-4 font-mono text-[8px] tracking-[0.22em] text-bone/42 md:inset-x-10 md:top-24 md:text-[9px] lg:inset-x-16">
-        <p><span className="mr-3 text-bone/72">05</span>SECTION</p>
-        <p>FINAL RESOLUTION</p>
-      </div>
-
       <div
         data-finale-anniversary
         className={`absolute bottom-[40%] left-5 font-mono text-[9px] tracking-[0.28em] text-night/70 md:bottom-auto md:left-10 md:top-[42%] md:text-[10px] md:text-bone/64 lg:left-16 ${visible}`}
@@ -35,7 +30,7 @@ export function FinaleTypography({ reducedMotion = false }: FinaleTypographyProp
 
       <div
         data-finale-closing
-        className={`absolute inset-x-5 bottom-5 flex items-end justify-between gap-6 border-t border-bone/12 pt-4 md:inset-x-10 md:bottom-7 lg:inset-x-16 ${visible}`}
+        className={`absolute inset-x-5 bottom-5 flex items-end justify-between gap-6 md:inset-x-10 md:bottom-7 lg:inset-x-16 ${visible}`}
       >
         <div>
           <p className="text-sm font-semibold tracking-[-0.03em] md:text-base">RUANG MERDEKA</p>

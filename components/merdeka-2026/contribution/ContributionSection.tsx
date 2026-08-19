@@ -165,11 +165,6 @@ export function ContributionSection() {
       <div className="sticky top-0 h-svh overflow-hidden bg-night">
         <ContributionRibbon />
 
-        <div className="pointer-events-none absolute inset-x-5 top-24 z-20 flex items-center justify-between border-b border-bone/12 pb-4 font-mono text-[8px] tracking-[0.22em] text-bone/42 md:inset-x-10 md:top-28 md:text-[9px] lg:inset-x-16">
-          <p><span className="mr-3 text-red-flag">04</span>SECTION</p>
-          <p>NIAT PERSONAL</p>
-        </div>
-
         <ContributionNarrative />
 
         <div

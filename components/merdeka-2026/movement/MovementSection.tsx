@@ -36,6 +36,8 @@ export function MovementSection() {
       gsap.set("[data-movement-opening-line]", { yPercent: 112, rotateX: -16, transformOrigin: "50% 100%" });
       gsap.set("[data-movement-million-line]", { yPercent: 110 });
       gsap.set("[data-movement-together-word]", { yPercent: 108, scaleX: 0.93 });
+      gsap.set("[data-movement-index-item], [data-collective-signal]", { opacity: 0 });
+      gsap.set("[data-collective-path]", { strokeDashoffset: 1 });
       prepareHumanStoryStates();
 
       const timeline = gsap.timeline({
@@ -69,11 +71,23 @@ export function MovementSection() {
         .to("[data-movement-directions]", { opacity: 0, y: -14, duration: 0.02, ease: "none" }, 0.785)
         .fromTo("[data-movement-together]", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.028, ease: "none" }, 0.8)
         .to("[data-movement-together-word]", { yPercent: 0, scaleX: 1, duration: 0.045, ease: "none" }, 0.81)
-        .to("[data-movement-together]", { opacity: 1, duration: 0.035, ease: "none" }, 0.855)
-        .to("[data-movement-together]", { opacity: 0, duration: 0.018, ease: "none" }, 0.91)
-        .fromTo("[data-movement-pulse-copy]", { opacity: 0 }, { opacity: 1, duration: 0.015, ease: "none" }, 0.9)
-        .to("[data-movement-pulse-copy]", { opacity: 0, duration: 0.014, ease: "none" }, 0.962)
-        .fromTo("[data-movement-exit-wipe]", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 0.38, duration: 0.03, ease: "none" }, 0.97);
+        .to("[data-movement-together]", { opacity: 1, duration: 0.02, ease: "none" }, 0.85)
+        .to("[data-movement-together]", { opacity: 0, scale: 1.025, duration: 0.015, ease: "none" }, 0.87)
+        .fromTo("[data-movement-collective]", { opacity: 0 }, { opacity: 1, duration: 0.012, ease: "none" }, 0.865)
+        .fromTo("[data-movement-index]", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.018, ease: "none" }, 0.87)
+        .to("[data-movement-index-item]", { opacity: 1, x: 0, duration: 0.008, stagger: 0.006, ease: "none" }, 0.875)
+        .to("[data-collective-path]", { strokeDashoffset: 0, duration: 0.055, stagger: 0.004, ease: "none" }, 0.872)
+        .to("[data-collective-signal]", { opacity: 1, scale: 1.8, duration: 0.009, stagger: 0.007, ease: "none" }, 0.878)
+        .to("[data-collective-signal]", { scale: 1, duration: 0.016, stagger: 0.006, ease: "none" }, 0.887)
+        .to("[data-movement-bridge-copy]", { opacity: 1, y: 0, duration: 0.014, stagger: 0.018, ease: "none" }, 0.89)
+        .to("[data-collective-signal]", { x: isMobile ? 90 : 220, duration: 0.045, stagger: 0.004, ease: "none" }, 0.91)
+        .to("[data-movement-index], [data-movement-bridge-copy]", { opacity: 0, duration: 0.012, ease: "none" }, 0.93)
+        .to("[data-collective-path]", { opacity: 0.14, duration: 0.018, ease: "none" }, 0.93)
+        .fromTo("[data-movement-trace-statement]", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.018, ease: "none" }, 0.937)
+        .to("[data-movement-trace-statement]", { opacity: 0, x: -18, duration: 0.012, ease: "none" }, 0.976)
+        .fromTo("[data-movement-chase-signal]", { opacity: 0, xPercent: -120, scaleX: 0.4 }, { opacity: 1, xPercent: 0, scaleX: 1, duration: 0.012, ease: "none" }, 0.968)
+        .to("[data-movement-chase-signal]", { x: () => window.innerWidth + 240, scaleX: 2.4, duration: 0.026, ease: "power2.in" }, 0.978)
+        .to("[data-movement-collective]", { opacity: 0, duration: 0.016, ease: "none" }, 0.984);
     }, sectionRef);
 
     return () => {
@@ -89,7 +103,7 @@ export function MovementSection() {
       ref={sectionRef}
       id="movement"
       aria-label="Indonesia terus bergerak"
-      className="relative min-h-[430svh] bg-night text-bone md:min-h-[580svh] lg:min-h-[650svh]"
+      className="relative min-h-[390svh] bg-night text-bone md:min-h-[580svh] lg:min-h-[650svh]"
     >
       <div className="sticky top-0 h-svh overflow-hidden bg-night">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
@@ -98,11 +112,6 @@ export function MovementSection() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(231,0,17,0.075),transparent_48%)]" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(to_bottom,rgba(5,5,5,0.26),transparent_23%,transparent_73%,rgba(5,5,5,0.7))]" />
         <MovementContent />
-        <div
-          aria-hidden="true"
-          data-movement-exit-wipe
-          className="pointer-events-none absolute inset-0 z-[25] origin-left scale-x-0 bg-[linear-gradient(90deg,rgba(231,0,17,0.95),rgba(231,0,17,0.72)_48%,rgba(231,0,17,0.05))] opacity-0"
-        />
         <div aria-hidden="true" className="film-grain pointer-events-none absolute inset-0 z-30 opacity-[0.045] mix-blend-soft-light" />
       </div>
     </section>

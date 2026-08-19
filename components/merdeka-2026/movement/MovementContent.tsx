@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CollectiveMomentum } from "./CollectiveMomentum";
 import { HumanStoryScene, ReducedHumanStories } from "./human-stories/HumanStoryScene";
 
 function MaskedLine({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -11,12 +12,7 @@ function MaskedLine({ children, className = "" }: { children: ReactNode; classNa
 
 export function MovementContent() {
   return (
-    <div className="pointer-events-none absolute inset-0 z-20 px-5 pb-7 pt-20 md:px-10 md:pb-10 md:pt-24 lg:px-16">
-      <div className="flex items-center justify-between border-b border-bone/12 pb-4 font-mono text-[8px] tracking-[0.22em] text-bone/42 md:text-[9px]">
-        <p><span className="mr-3 text-red-flag">03</span>SECTION</p>
-        <p>GERAK KITA</p>
-      </div>
-
+    <div className="pointer-events-none absolute inset-0 z-20 px-5 pb-7 md:px-10 md:pb-10 lg:px-16">
       <p
         className="absolute left-5 top-[48%] max-w-[20ch] -translate-y-1/2 font-mono text-[8px] uppercase tracking-[0.24em] text-bone/44 opacity-0 md:left-10 md:text-[9px] lg:left-16"
         data-movement-seed-copy
@@ -51,7 +47,7 @@ export function MovementContent() {
       <div className="absolute inset-x-5 bottom-10 top-36 flex items-center opacity-0 md:inset-x-10 md:bottom-12 md:top-40 lg:inset-x-16" data-movement-directions>
         <div className="w-full">
           <p className="font-mono text-[8px] tracking-[0.24em] text-bone/42 md:text-[9px]">ARAH YANG BERBEDA</p>
-          <div className="mt-6 grid grid-cols-2 gap-y-4 border-y border-bone/14 py-5 font-mono text-[9px] uppercase tracking-[0.2em] text-bone/58 md:grid-cols-4 md:text-[10px]">
+          <div className="mt-6 grid grid-cols-2 gap-y-4 py-5 font-mono text-[9px] uppercase tracking-[0.2em] text-bone/58 md:grid-cols-4 md:text-[10px]">
             <p>DESA → KOTA</p><p className="text-right md:text-left">DARAT → LAUT</p>
             <p>PAGI → MALAM</p><p className="text-right">KINI → NANTI</p>
           </div>
@@ -70,12 +66,9 @@ export function MovementContent() {
         </p>
       </div>
 
-      <div className="absolute inset-x-5 bottom-10 top-36 flex items-end justify-between opacity-0 md:inset-x-10 md:bottom-12 md:top-40 lg:inset-x-16" data-movement-pulse-copy>
-        <p className="font-mono text-[8px] tracking-[0.24em] text-bone/48 md:text-[9px]">SATU DENYUT MENERUSKAN PERJALANAN</p>
-        <p className="hidden font-mono text-[8px] tracking-[0.24em] text-red-flag/75 md:block md:text-[9px]">03 → 04</p>
-      </div>
+      <CollectiveMomentum />
 
-      <div className="absolute inset-x-5 bottom-7 flex justify-between border-t border-bone/12 pt-3 font-mono text-[7px] tracking-[0.2em] text-bone/40 md:inset-x-10 md:bottom-10 md:text-[8px] lg:inset-x-16">
+      <div className="absolute inset-x-5 bottom-7 flex justify-between font-mono text-[7px] tracking-[0.2em] text-bone/32 md:inset-x-10 md:bottom-10 md:text-[8px] lg:inset-x-16">
         <p>KEMAJUAN LAHIR DARI GERAK SEHARI-HARI</p>
         <p className="hidden md:block">INDONESIA TIDAK PERNAH DIAM</p>
       </div>
@@ -86,15 +79,11 @@ export function MovementContent() {
 export function ReducedMovementContent() {
   return (
     <section id="movement" aria-label="Indonesia terus bergerak" className="bg-night px-5 py-24 text-bone md:px-10 md:py-32 lg:px-16">
-      <div className="flex items-center justify-between border-b border-bone/15 pb-4 font-mono text-[9px] tracking-[0.2em] text-bone/45">
-        <p><span className="mr-3 text-red-flag">03</span>SECTION</p><p>GERAK KITA</p>
-      </div>
-
       <h2 className="py-24 text-[clamp(3.8rem,10vw,9rem)] font-semibold uppercase leading-[0.78] tracking-[-0.078em]">
         INDONESIA<br /><span className="text-red-flag">TERUS</span><br />BERGERAK.
       </h2>
 
-      <p className="border-y border-bone/15 py-20 text-center text-[clamp(1.7rem,4.5vw,4.5rem)] font-medium uppercase leading-[0.96] tracking-[-0.045em]">
+      <p className="py-20 text-center text-[clamp(1.7rem,4.5vw,4.5rem)] font-medium uppercase leading-[0.96] tracking-[-0.045em]">
         TETAPI KARENA <span className="text-red-flag">JUTAAN GERAK</span><br />YANG TERJADI BERSAMA.
       </p>
 
@@ -104,6 +93,13 @@ export function ReducedMovementContent() {
         <span className="block text-[clamp(2.6rem,6vw,6rem)]">YANG BERGERAK</span>
         <span className="block text-[clamp(4.8rem,15vw,14rem)] font-semibold text-red-flag">BERSAMA.</span>
       </p>
+
+      <div className="pt-28">
+        <p className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-bone/45">JALANNYA BERBEDA. GERAKNYA BERBEDA.</p>
+        <p className="mt-10 text-[clamp(3.2rem,10vw,8rem)] font-semibold uppercase leading-[0.8] tracking-[-0.075em]">
+          NAMUN SEMUANYA<br />MENINGGALKAN <span className="text-red-flag">JEJAK.</span>
+        </p>
+      </div>
     </section>
   );
 }
