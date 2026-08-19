@@ -1,24 +1,32 @@
 import type { Metadata } from "next";
+import { ExperienceProgress } from "@/components/experience/ExperienceProgress";
+import { MerdekaSoundtrack } from "@/components/merdeka-2026/audio/MerdekaSoundtrack";
 import { HeroSection } from "@/components/merdeka-2026/hero/HeroSection";
 import { MeaningSection } from "@/components/merdeka-2026/MeaningSection";
 import { MovementSection } from "@/components/merdeka-2026/MovementSection";
-import { ContributionSection } from "@/components/merdeka-2026/ContributionSection";
 import { FinaleSection } from "@/components/merdeka-2026/FinaleSection";
+import { TraceSection } from "@/components/merdeka-2026/TraceSection";
+import { VoiceExperience } from "@/components/merdeka-2026/VoiceExperience";
 
 export const metadata: Metadata = {
-  title: "Ruang Merdeka 2026 — 81 Tahun Merdeka",
+  title: {
+    absolute: "HariKita | Perjalanan Belum Usai",
+  },
   description:
-    "Sebuah pengalaman digital interaktif untuk memperingati 81 tahun kemerdekaan Indonesia dan memahami arti merdeka hari ini.",
+    "HariKita memperingati 81 tahun kemerdekaan Indonesia melalui perjalanan interaktif tentang arti merdeka yang terus kita isi bersama.",
 };
 
 export default function Merdeka2026Page() {
   return (
     <main className="overflow-clip bg-night text-bone antialiased">
+      <ExperienceProgress />
+      <MerdekaSoundtrack />
       <HeroSection />
       <MeaningSection />
       <MovementSection />
-      <ContributionSection />
+      <TraceSection />
       <FinaleSection />
+      <VoiceExperience />
     </main>
   );
 }
