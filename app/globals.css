@@ -16,8 +16,16 @@
   --color-merdeka-deep: #8f1225;
   --color-red-flag: #e70011;
   --color-red-highlight: #ff2738;
+  --color-hari-paper: #f5f0e7;
+  --color-hari-paper-deep: #e9dfd0;
+  --color-hari-ink: #1d1c1a;
+  --color-hari-terracotta: #c87952;
+  --color-hari-gold: #d1a04e;
+  --color-hari-red: #a53f35;
+  --color-hari-leaf: #65775d;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
