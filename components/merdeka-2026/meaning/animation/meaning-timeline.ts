@@ -38,7 +38,6 @@ export function createMeaningTimeline(section: HTMLElement, progressRef: Meaning
   };
 
   timeline
-    .to(select("[data-meaning-scroll-progress]"), { scaleX: 1, duration: 1, ease: "none" }, 0)
     .fromTo(
       select("[data-meaning-entry]"),
       { opacity: 0, y: 12 },

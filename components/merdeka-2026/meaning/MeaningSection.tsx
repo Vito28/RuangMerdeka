@@ -47,7 +47,7 @@ export function MeaningSection() {
       ref={sectionRef}
       id="meaning"
       aria-label="Denyut sebuah bangsa"
-      className="relative min-h-[360svh] bg-night text-bone md:min-h-[460svh] lg:min-h-[560svh]"
+      className="relative min-h-[330svh] bg-night text-bone md:min-h-[460svh] lg:min-h-[560svh]"
     >
       <div className="sticky top-0 h-svh overflow-hidden bg-night">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
