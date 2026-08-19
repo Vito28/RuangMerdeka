@@ -1,1 +1,1 @@
-export { FinaleSection } from "./finale/FinaleSection";
+export { YearMemorySection as FinaleSection } from "./year-memory/YearMemorySection";
