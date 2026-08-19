@@ -5,6 +5,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
+import { ExperienceProgress } from "@/components/experience/ExperienceProgress";
 import { currentEdition, editions } from "@/lib/editions";
 import { motionTokens } from "@/lib/motion/tokens";
 
@@ -16,19 +17,10 @@ function Arrow({ className = "" }: { className?: string }) {
   return <span aria-hidden="true" className={className}>↗</span>;
 }
 
-function SectionMeta({ index, label }: { index: string; label: string }) {
-  return (
-    <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.22em] text-bone/45">
-      <p>{index}</p>
-      <p>{label}</p>
-    </div>
-  );
-}
-
 function Navigation({ menuOpen, onToggle }: { menuOpen: boolean; onToggle: () => void }) {
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40 flex h-20 items-center justify-between border-b border-white/8 bg-ink/72 px-5 backdrop-blur-md md:px-10 lg:px-16">
+      <header data-global-navigation className="fixed inset-x-0 top-0 z-40 flex h-20 items-center justify-between px-5 md:px-10 lg:px-16">
         <a href="#top" className="text-[11px] font-semibold tracking-[0.2em] text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
           RUANG MERDEKA
         </a>
@@ -58,10 +50,10 @@ function Navigation({ menuOpen, onToggle }: { menuOpen: boolean; onToggle: () =>
         data-open={menuOpen}
         className="fixed inset-0 z-30 flex translate-y-full flex-col justify-between bg-ink-soft px-5 pb-8 pt-28 transition-transform duration-700 ease-cinematic data-[open=true]:translate-y-0 md:hidden"
       >
-        <nav aria-label="Navigasi mobile" className="flex flex-col text-[clamp(2.8rem,15vw,5.5rem)] font-semibold uppercase leading-[0.92] tracking-[-0.065em]">
-          <a onClick={onToggle} className="border-t border-white/18 py-4 focus-visible:outline-2" href="#about">About</a>
-          <a onClick={onToggle} className="border-t border-white/18 py-4 focus-visible:outline-2" href="#archive">Archive</a>
-          <Link onClick={onToggle} className="border-y border-white/18 py-4 text-merdeka focus-visible:outline-2" href={currentEdition.href}>
+        <nav aria-label="Navigasi mobile" className="flex flex-col gap-2 text-[clamp(2.8rem,15vw,5.5rem)] font-semibold uppercase leading-[0.92] tracking-[-0.065em]">
+          <a onClick={onToggle} className="py-3 focus-visible:outline-2" href="#about">About</a>
+          <a onClick={onToggle} className="py-3 focus-visible:outline-2" href="#archive">Archive</a>
+          <Link onClick={onToggle} className="py-3 text-merdeka focus-visible:outline-2" href={currentEdition.href}>
             Current <Arrow className="ml-2 text-[0.45em]" />
           </Link>
         </nav>
@@ -89,7 +81,7 @@ function Entrance() {
       </div>
 
       <div className="relative z-10 grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12">
-        <div className="col-span-full mb-5 h-px origin-left bg-bone/28" data-hero-rule />
+        <div className="col-span-full mb-7 h-px w-12 origin-left bg-merdeka/85" data-hero-signal />
         <h1 className="col-span-full font-semibold uppercase tracking-[-0.085em]">
           <span className="block overflow-hidden">
             <span className="block text-[clamp(4.05rem,14vw,13rem)] leading-[0.77]" data-hero-line>Ruang</span>
@@ -121,9 +113,7 @@ function Entrance() {
 
 function About() {
   return (
-    <section id="about" className="relative overflow-hidden border-t border-white/8 bg-ink px-5 py-28 md:px-10 md:py-40 lg:px-16 lg:py-48">
-      <SectionMeta index="02" label="ABOUT THE PROJECT" />
-
+    <section id="about" className="relative overflow-hidden bg-ink px-5 py-28 md:px-10 md:py-40 lg:px-16 lg:py-48">
       <div className="mt-24 grid grid-cols-4 gap-x-4 md:mt-36 md:grid-cols-8 lg:grid-cols-12">
         <div className="col-span-full overflow-hidden">
           <h2 className="text-[clamp(3.8rem,10vw,9.8rem)] font-semibold uppercase leading-[0.82] tracking-[-0.078em]" data-mask-line>Satu ruang.</h2>
@@ -136,7 +126,7 @@ function About() {
           Ruang Merdeka adalah eksperimen digital tahunan untuk melihat kembali Indonesia melalui cerita, desain, teknologi, dan interaksi.
         </p>
 
-        <div className="col-span-3 mt-16 border-t border-bone/18 pt-5 font-mono text-[9px] leading-5 tracking-[0.16em] text-bone/42 md:col-span-3 md:col-start-6 lg:col-span-3 lg:col-start-10" data-reveal>
+        <div className="col-span-3 mt-16 font-mono text-[9px] leading-5 tracking-[0.16em] text-bone/42 md:col-span-3 md:col-start-6 lg:col-span-3 lg:col-start-10" data-reveal>
           <p>SETIAP TAHUN MEMBAWA</p>
           <p>PERTANYAAN, VISUAL, DAN</p>
           <p>PENGALAMAN YANG BERBEDA.</p>
@@ -151,8 +141,6 @@ function AnnualIdea() {
 
   return (
     <section className="relative overflow-hidden bg-ink-soft px-5 py-28 md:min-h-[135svh] md:px-10 md:py-40 lg:px-16 lg:py-48">
-      <SectionMeta index="03" label="ONE YEAR, ONE INTERPRETATION" />
-
       <div className="mt-24 grid grid-cols-4 gap-x-4 md:mt-36 md:grid-cols-8 lg:grid-cols-12">
         <div className="col-span-4 md:col-span-6 lg:col-span-8">
           <div className="overflow-hidden">
@@ -187,8 +175,6 @@ function AnnualIdea() {
 function Manifesto() {
   return (
     <section className="relative overflow-hidden bg-ink px-5 py-28 md:px-10 md:py-44 lg:px-16 lg:py-52">
-      <SectionMeta index="04" label="MANIFESTO" />
-
       <div className="mt-28 flex flex-col gap-36 md:mt-44 md:gap-56">
         <div className="overflow-hidden">
           <h2 className="text-[clamp(3.7rem,9.5vw,9.6rem)] font-semibold uppercase leading-[0.82] tracking-[-0.078em]" data-manifesto-line>
@@ -202,7 +188,7 @@ function Manifesto() {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-4 border-t border-bone/18 pt-7 md:grid-cols-8 lg:grid-cols-12" data-reveal>
+        <div className="grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12" data-reveal>
           <p className="col-span-3 text-[11px] font-semibold tracking-[0.15em] text-merdeka md:col-span-2">RUANG MERDEKA</p>
           <p className="col-span-4 mt-16 max-w-3xl text-[clamp(1.65rem,3.3vw,3.5rem)] leading-[1.13] tracking-[-0.047em] md:col-span-6 md:col-start-3 md:mt-0 lg:col-span-7 lg:col-start-6">
             Ruang digital untuk melihat Indonesia dari perspektif yang berbeda, setiap tahun.
@@ -215,9 +201,7 @@ function Manifesto() {
 
 function Archive() {
   return (
-    <section id="archive" className="relative overflow-hidden border-t border-white/8 bg-ink-soft px-5 py-28 md:px-10 md:py-40 lg:px-16 lg:py-48">
-      <SectionMeta index="05" label="ANNUAL ARCHIVE" />
-
+    <section id="archive" className="relative overflow-hidden bg-ink-soft px-5 py-28 md:px-10 md:py-40 lg:px-16 lg:py-48">
       <div className="mt-24 grid grid-cols-4 gap-x-4 md:mt-36 md:grid-cols-8 lg:grid-cols-12">
         <div className="col-span-full">
           <h2 className="text-[clamp(4.2rem,11vw,11rem)] font-semibold uppercase leading-[0.78] tracking-[-0.082em]" data-reveal>
@@ -255,7 +239,7 @@ function Archive() {
                 <span className="absolute bottom-5 left-5 right-5 h-px origin-left bg-bone/45 transition-transform duration-700 ease-cinematic group-hover:scale-x-75" />
               </div>
 
-              <div className="col-span-4 mt-10 flex items-center justify-between border-t border-bone/12 pt-4 font-mono text-[9px] tracking-[0.18em] md:col-span-8 md:mt-7 lg:col-span-12">
+              <div className="col-span-4 mt-10 flex items-center justify-between font-mono text-[9px] tracking-[0.18em] md:col-span-8 md:mt-7 lg:col-span-12">
                 <span>ENTER EXPERIENCE</span>
                 <Arrow className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
               </div>
@@ -271,15 +255,13 @@ function Finale() {
   return (
     <section className="relative flex min-h-svh flex-col justify-between overflow-hidden bg-ink px-5 pb-8 pt-28 md:px-10 md:pb-10 lg:px-16">
       <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_78%_60%,rgb(200_16_46_/_0.13),transparent_32rem)]" />
-      <div className="relative z-10"><SectionMeta index="06" label="FINALE" /></div>
-
       <div className="relative z-10 overflow-hidden" data-finale-copy>
         <p className="text-[clamp(4.6rem,14.5vw,14rem)] font-semibold uppercase leading-[0.77] tracking-[-0.085em]">
           Merdeka<br /><span className="text-merdeka">Terus.</span>
         </p>
       </div>
 
-      <footer className="relative z-10 grid grid-cols-4 gap-x-4 border-t border-bone/22 pt-5 font-mono text-[8px] leading-5 tracking-[0.17em] text-bone/58 md:grid-cols-8 md:text-[9px] lg:grid-cols-12">
+      <footer className="relative z-10 grid grid-cols-4 gap-x-4 font-mono text-[8px] leading-5 tracking-[0.17em] text-bone/58 md:grid-cols-8 md:text-[9px] lg:grid-cols-12">
         <p className="col-span-2 md:col-span-3">RUANG MERDEKA<br />AN ANNUAL DIGITAL EXPERIENCE</p>
         <p className="col-span-2 text-right md:col-start-7 lg:col-start-11">CREATED IN INDONESIA<br />2026 — ∞</p>
       </footer>
@@ -303,13 +285,13 @@ export function HomeExperience() {
           opacity: 1,
         });
         gsap.set("[data-hero-meta], [data-hero-atmosphere]", { opacity: 1 });
-        gsap.set("[data-hero-rule]", { scaleX: 1 });
+        gsap.set("[data-hero-signal]", { scaleX: 1 });
         return;
       }
 
       gsap
         .timeline({ defaults: { ease: motionTokens.ease.reveal } })
-        .fromTo("[data-hero-rule]", { scaleX: 0 }, { scaleX: 1, duration: 1.15 })
+        .fromTo("[data-hero-signal]", { scaleX: 0 }, { scaleX: 1, duration: 0.9 })
         .fromTo("[data-hero-line]", { yPercent: 112 }, { yPercent: 0, duration: 1.05, stagger: 0.13 }, 0.35)
         .to("[data-hero-meta]", { opacity: 1, duration: 0.75, stagger: 0.09 }, 0.95)
         .to("[data-hero-atmosphere]", { opacity: 1, duration: 1.5 }, 0.7);
@@ -332,6 +314,20 @@ export function HomeExperience() {
           scrollTrigger: { trigger: element, start: "top 88%", once: true },
         });
       });
+
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        gsap.to("[data-global-navigation]", {
+          opacity: 0.16,
+          y: -4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: rootRef.current,
+            start: "top top",
+            end: () => `+=${window.innerHeight * 0.8}`,
+            scrub: 0.8,
+          },
+        });
+      }
 
       gsap.utils.toArray<HTMLElement>("[data-manifesto-line]").forEach((line) => {
         gsap.fromTo(line, { yPercent: 105 }, {
@@ -406,6 +402,7 @@ export function HomeExperience() {
   return (
     <main ref={rootRef} className="relative isolate overflow-clip bg-ink text-bone antialiased">
       <div aria-hidden="true" className="film-grain pointer-events-none fixed inset-0 z-50 opacity-[0.035] mix-blend-soft-light" />
+      <ExperienceProgress />
       <Navigation menuOpen={menuOpen} onToggle={() => setMenuOpen((open) => !open)} />
       <Entrance />
       <About />
